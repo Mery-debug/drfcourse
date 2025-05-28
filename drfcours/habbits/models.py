@@ -8,20 +8,29 @@ from users.models import User
 
 class Habits(models.Model):
     """Модель привычки"""
+    PERIODICITY_CHOICES = [
+        (1, "ежедневно"),
+        (2, "через день"),
+        (3, "раз в 3 дня"),
+        (4, "раз в 4 дня"),
+        (5, "раз в 5 дней"),
+        (6, "раз в 6 дней"),
+        (7, "еженедельно")
+    ]
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Пользователь")
     place = models.CharField(max_length=150, null=True, verbose_name="Место для выполнения привычки")
     time = models.TimeField(null=True, verbose_name="желаемое время", help_text="введите время в формате чч:мм")
     move = models.CharField(max_length=150, verbose_name="Привычка")
     good_hab = models.BooleanField(default=False, help_text="Признак приятной привычки")
-    linked_hab = models.ForeignKey("self", on_delete=models.CASCADE, verbose_name="Связанная привычка")
-    periodicity = models.IntegerField(
-        verbose_name='Периодичность (в днях)',
-        help_text="Введите число от 1 до 7, где 1 - ежедневное выполнение, а 7 - еженедельное",
+    linked_hab = models.ForeignKey("self", on_delete=models.CASCADE, null=True, verbose_name="Связанная привычка")
+    periodicity = models.PositiveSmallIntegerField(
+        choices=PERIODICITY_CHOICES,
         default=1,
         validators=[
             MinValueValidator(1),
             MaxValueValidator(7)
-        ]
+        ],
+        help_text="Периодичность выполнения: 1-ежедневно, а 7-еженедельно"
     )
     reward = models.TextField(verbose_name="Вознаграждение за выполнение привычки")
     execution_time = models.DurationField(
@@ -37,6 +46,7 @@ class Habits(models.Model):
         default=False,
         verbose_name="Признак публичности"
     )
+    last_remember = models.DateTimeField()
 
     def clean(self):
         """Валидация заданных полей привычки"""

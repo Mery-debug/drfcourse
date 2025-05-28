@@ -32,6 +32,8 @@ ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'users.User'
 
+TG_BOT_TOKEN = env.str("")
+
 # Application definition
 
 INSTALLED_APPS = [
