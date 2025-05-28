@@ -1,0 +1,17 @@
+from drfcours.habbits.apps import HabbitsConfig
+from drfcours.habbits.views import (
+    HabitCreateAPIView,
+    HabitListAPIView,
+    HabitRetrieveAPIView,
+    HabitDestroyAPIView,
+    HabitUpdateAPIView)
+
+app_name = HabbitsConfig.name
+
+urlpatterns = [
+    path('create/', HabitCreateAPIView.as_view(), name='habits_create'),
+    path('list/', HabitListAPIView.as_view(), name='habits_list'),
+    path('retrieve/<int:pk>/', HabitRetrieveAPIView.as_view(), name='habits_retrieve'),
+    path('delete/<int:pk>/', HabitDestroyAPIView.as_view(), name='habits_delete'),
+    path('update/<int:pk>/', HabitUpdateAPIView.as_view(), name='habits_update'),
+]
