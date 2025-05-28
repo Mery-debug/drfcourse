@@ -8,8 +8,8 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from drfcours.users.models import User
-from drfcours.users.serializers import UserSerializer, TokenSerializer
+from users.models import User
+from users.serializers import UserSerializer, TokenSerializer
 
 
 class MyTokenObtainPairView(TokenObtainPairView):

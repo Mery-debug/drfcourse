@@ -3,10 +3,11 @@ from datetime import timedelta
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
-from drfcours.users.models import User
+from users.models import User
 
 
 class Habits(models.Model):
+    """Модель привычки"""
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Пользователь")
     place = models.CharField(max_length=150, null=True, verbose_name="Место для выполнения привычки")
     time = models.TimeField(null=True, verbose_name="желаемое время", help_text="введите время в формате чч:мм")
@@ -37,12 +38,25 @@ class Habits(models.Model):
         verbose_name="Признак публичности"
     )
 
+    def clean(self):
+        """Валидация заданных полей привычки"""
+        if self.good_hab and (self.reward or self.linked_hab):
+            raise ValidationError("Приятная привычка не может иметь вознаграждение или связанную привычку!")
+        if not self.good_hab and self.reward and self.linked_hab:
+            raise ValidationError("Укажите либо вознаграждение, либо связанную привычку!")
+
+    @property
+    def is_visible(self):
+        """Проверка видимости привычки для любого пользователя"""
+        return self.is_public
+
     def __str__(self):
         return f"{self.owner}, {self.move}"
 
     class Meta:
         verbose_name = "привычка"
         verbose_name_plural = "привычки"
+
 
 
 

@@ -1,24 +1,30 @@
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from rest_framework.authentication import SessionAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
-from drfcours.habbits.models import Habits
-from drfcours.habbits.paginators import Pagination
-from drfcours.habbits.permissions import OwnerOrReadOnly
-from drfcours.habbits.serializers import HabitSerializers
+from habbits.models import Habits
+from habbits.paginators import Pagination
+from habbits.permissions import OwnerOrReadOnly
+from habbits.serializers import HabitSerializer, PublicHabitSerializer
+
+
+class PublicHabitViewSet(viewsets.ReadOnlyModelViewSet):
+    """Публичный доступ к привычкам для всех пользователей"""
+    queryset = Habits.objects.filter(is_public=True)
+    serializer_class = PublicHabitSerializer
+    permission_classes = [AllowAny]
 
 
 class HabitListAPIView(generics.ListAPIView):
-    serializer_class = HabitSerializers
+    """Эндпоинт закрытого доступа только к списку своих привычек пользователя"""
+    serializer_class = HabitSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = Pagination
 
-    def get_queryset(self):
-        return Habits.objects.filter(owner=self.request.user)
-
 
 class HabitRetrieveAPIView(generics.RetrieveAPIView):
-    serializer_class = HabitSerializers
+    """Эндпоинт закрытого доступа к конкретной привычке"""
+    serializer_class = HabitSerializer
     permission_classes = [IsAuthenticated, OwnerOrReadOnly]
 
     def get_serializer_context(self):
@@ -28,22 +34,21 @@ class HabitRetrieveAPIView(generics.RetrieveAPIView):
 
 
 class HabitCreateAPIView(generics.CreateAPIView):
-    serializer_class = HabitSerializers
+    """Эндпоинт создания привычки только для авторизованных пользователей"""
+    serializer_class = HabitSerializer
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def perform_create(self, serializer):
-        lesson = serializer.save()
-        lesson.owner = self.request.user
-        lesson.save()
 
 class HabitUpdateAPIView(generics.UpdateAPIView):
-    serializer_class = HabitSerializers
+    """Эндпоинт изменения привычки только для авторизованного владельца привычки"""
+    serializer_class = HabitSerializer
     authentication_classes = [SessionAuthentication, OwnerOrReadOnly]
     queryset = Habits.objects.all()
 
 
 class HabitDestroyAPIView(generics.DestroyAPIView):
+    """Эндпоинт удаления привычки только для авторизованного владельца привычки"""
     queryset = Habits.objects.all()
     authentication_classes = [SessionAuthentication, OwnerOrReadOnly]
-    serializer_class = HabitSerializers
+    serializer_class = HabitSerializer

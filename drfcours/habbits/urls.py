@@ -1,5 +1,7 @@
-from drfcours.habbits.apps import HabbitsConfig
-from drfcours.habbits.views import (
+from django.urls import path
+
+from habbits.apps import HabbitsConfig
+from habbits.views import (
     HabitCreateAPIView,
     HabitListAPIView,
     HabitRetrieveAPIView,
