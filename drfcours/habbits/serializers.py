@@ -1,21 +1,35 @@
+
 from rest_framework import serializers
-from django.core.exceptions import ValidationError
+
 from .models import Habits
+
 
 class HabitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Habits
-        fields = ("id", "move", "place", "good_hab", "time", "linked_hab", "periodicity", "reward", "execution_time", "is_public", "owner")
-        read_only_fields = ('user',)
+        fields = (
+            "id",
+            "move",
+            "place",
+            "good_hab",
+            "time",
+            "linked_hab",
+            "periodicity",
+            "reward",
+            "execution_time",
+            "is_public",
+            "owner",
+        )
+        read_only_fields = ("user",)
 
     def validate(self, data):
         """Валидация привычек на уровне сериалайзера"""
-        good_hab = data.get('good_hab', False)
-        reward = data.get('reward')
-        linked_hab = data.get('linked_hab')
-        time_to_complete = data.get('time_to_complete')
-        periodicity = data.get('periodicity', 1)
-        is_public = data.get('is_public', False)
+        good_hab = data.get("good_hab", False)
+        reward = data.get("reward")
+        linked_hab = data.get("linked_hab")
+        time_to_complete = data.get("time_to_complete")
+        periodicity = data.get("periodicity", 1)
+        is_public = data.get("is_public", False)
         if good_hab:
             if reward:
                 raise serializers.ValidationError(
@@ -52,14 +66,11 @@ class HabitSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """Проверенные данные"""
-        validated_data['user'] = self.context['request'].user
+        validated_data["user"] = self.context["request"].user
         return super().create(validated_data)
 
 
 class PublicHabitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Habits
-        fields = [
-            'id', 'place', 'time', 'move',
-            'periodicity', 'execution_time'
-        ]
+        fields = ["id", "place", "time", "move", "periodicity", "execution_time"]

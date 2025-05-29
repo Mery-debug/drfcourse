@@ -8,18 +8,39 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('habbits', '0002_initial'),
+        ("habbits", "0002_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='habits',
-            name='linked_hab',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='habbits.habits', verbose_name='Связанная привычка'),
+            model_name="habits",
+            name="linked_hab",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="habbits.habits",
+                verbose_name="Связанная привычка",
+            ),
         ),
         migrations.AlterField(
-            model_name='habits',
-            name='periodicity',
-            field=models.PositiveSmallIntegerField(choices=[(1, 'ежедневно'), (2, 'через день'), (3, 'раз в 3 дня'), (4, 'раз в 4 дня'), (5, 'раз в 5 дней'), (6, 'раз в 6 дней'), (7, 'еженедельно')], default=1, help_text='Периодичность выполнения: 1-ежедневно, а 7-еженедельно', validators=[django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(7)]),
+            model_name="habits",
+            name="periodicity",
+            field=models.PositiveSmallIntegerField(
+                choices=[
+                    (1, "ежедневно"),
+                    (2, "через день"),
+                    (3, "раз в 3 дня"),
+                    (4, "раз в 4 дня"),
+                    (5, "раз в 5 дней"),
+                    (6, "раз в 6 дней"),
+                    (7, "еженедельно"),
+                ],
+                default=1,
+                help_text="Периодичность выполнения: 1-ежедневно, а 7-еженедельно",
+                validators=[
+                    django.core.validators.MinValueValidator(1),
+                    django.core.validators.MaxValueValidator(7),
+                ],
+            ),
         ),
     ]
