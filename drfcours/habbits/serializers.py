@@ -1,4 +1,6 @@
+from datetime import timedelta
 
+from dateutils import minutes
 from rest_framework import serializers
 
 from .models import Habits
@@ -46,9 +48,9 @@ class HabitSerializer(serializers.ModelSerializer):
             )
         if linked_hab and not linked_hab.good_hab:
             raise serializers.ValidationError(
-                "Связанная привычка должна быть приятной (good_hab=True)!"
+                "Связанная привычка должна быть приятной!"
             )
-        if time_to_complete and time_to_complete > 120:
+        if time_to_complete and time_to_complete > timedelta(minutes=2):
             raise serializers.ValidationError(
                 "Время выполнения не может превышать 120 секунд!"
             )

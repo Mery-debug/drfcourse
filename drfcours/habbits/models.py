@@ -43,7 +43,7 @@ class Habits(models.Model):
         validators=[MinValueValidator(1), MaxValueValidator(7)],
         help_text="Периодичность выполнения: 1-ежедневно, а 7-еженедельно",
     )
-    reward = models.TextField(verbose_name="Вознаграждение за выполнение привычки")
+    reward = models.TextField(null=True, blank=True, verbose_name="Вознаграждение за выполнение привычки")
     execution_time = models.DurationField(
         verbose_name="Время на выполнение",
         help_text="Формат: ЧЧ:ММ:СС (например, 00:02:00 — 2 минуты)",
