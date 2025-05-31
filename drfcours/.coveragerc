@@ -8,6 +8,8 @@ omit =
     */settings.py
     */wsgi.py
     */asgi.py
+    */tests.py
+    habbits/tests.py
 
 [report]
 exclude_lines =

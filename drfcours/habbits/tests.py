@@ -74,3 +74,23 @@ class HabitsCreate(APITestCase):
 
 
 
+class HabitsWithoutAuthorization(APITestCase):
+
+    def test_create_habit_unauthorized_fails(self):
+        url = reverse('habits:habits_create')
+        data = {
+            "place": "test",
+            "time": "09:05",
+            "move": "test",
+            "good_hab": True,
+            "reward": "Конфета",
+            "periodicity": 1,
+            "execution_time": "00:02:00",
+            "is_public": True
+        }
+        response = self.client.post(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertFalse(Habits.objects.filter(move="test").exists())
+
+
+
