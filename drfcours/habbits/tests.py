@@ -10,6 +10,7 @@ User = get_user_model()
 class HabitsCreate(APITestCase):
 
     def setUp(self):
+        """Создание пользователя и 2-х привычек, публичной и не приятной"""
         self.user = User.objects.create(email="sample@example.ru")
         self.habits_1 = Habits.objects.create(
             owner=self.user,
@@ -39,6 +40,7 @@ class HabitsCreate(APITestCase):
 
 
     def test_habits_list_public(self):
+        """Тест доступности списка публичных привычек"""
         url = reverse('habbits:public-habits-list')
         response = self.client.get(url)
         data = response.json()
@@ -52,6 +54,7 @@ class HabitsCreate(APITestCase):
         )
 
     def test_habits_validation(self):
+        """Тест валидации создания привычки"""
         url = reverse('habbits:habits_create')
         data = {
             "place": "",
@@ -77,6 +80,7 @@ class HabitsCreate(APITestCase):
 class HabitsWithoutAuthorization(APITestCase):
 
     def test_create_habit_unauthorized_fails(self):
+        """Тест создания привычки не авторизованным пользователем"""
         url = reverse('habits:habits_create')
         data = {
             "place": "test",

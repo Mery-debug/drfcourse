@@ -7,6 +7,7 @@ from ..drfcours.settings import TG_BOT_TOKEN
 
 @shared_task
 def send_telegram_reminder(chat_id):
+    """Отложенная задача для отправки напоминаний о приблежающемуся времени привычке в телеграм"""
     bot_token = TG_BOT_TOKEN
     bot = telegram.Bot(token=bot_token)
     habits_to_remind = Habits.objects.filter(

@@ -4,6 +4,7 @@ from .models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """Сериализатор пользователя"""
     password = serializers.CharField(write_only=True)
 
     class Meta:
@@ -19,6 +20,7 @@ class TokenSerializer(TokenObtainPairSerializer):
 
     @classmethod
     def get_token(cls, user):
+        """Сераилизатор токена для регистрации и авторизации пользователя"""
         token = super().get_token(user)
 
         token["username"] = user.username
