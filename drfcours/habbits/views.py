@@ -22,6 +22,9 @@ class HabitListAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     pagination_class = Pagination
 
+    def get_queryset(self):
+        return Habits.objects.filter(owner=self.request.user)
+
 
 class HabitRetrieveAPIView(generics.RetrieveAPIView):
     """Эндпоинт закрытого доступа к конкретной привычке"""

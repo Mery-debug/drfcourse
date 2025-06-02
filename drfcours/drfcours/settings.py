@@ -49,6 +49,9 @@ INSTALLED_APPS = [
     "users",
     "corsheaders",
     "drf_yasg",
+    "django_celery_beat",
+    "rest_framework",
+    "rest_framework_simplejwt",
 ]
 
 MIDDLEWARE = [
@@ -63,6 +66,13 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "drfcours.urls"
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
 
 TEMPLATES = [
     {

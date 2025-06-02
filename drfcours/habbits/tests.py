@@ -4,6 +4,7 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 
 from .models import Habits
+from .serializers import PublicHabitSerializer
 
 User = get_user_model()
 
