@@ -42,7 +42,6 @@ class HabitCreateAPIView(generics.CreateAPIView):
     """Эндпоинт создания привычки только для авторизованных пользователей"""
 
     serializer_class = HabitSerializer
-    authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
 
@@ -50,7 +49,7 @@ class HabitUpdateAPIView(generics.UpdateAPIView):
     """Эндпоинт изменения привычки только для авторизованного владельца привычки"""
 
     serializer_class = HabitSerializer
-    authentication_classes = [SessionAuthentication, OwnerOrReadOnly]
+    permission_classes = [IsAuthenticated, OwnerOrReadOnly]
     queryset = Habits.objects.all()
 
 
@@ -58,5 +57,5 @@ class HabitDestroyAPIView(generics.DestroyAPIView):
     """Эндпоинт удаления привычки только для авторизованного владельца привычки"""
 
     queryset = Habits.objects.all()
-    authentication_classes = [SessionAuthentication, OwnerOrReadOnly]
+    permission_classes = [IsAuthenticated, OwnerOrReadOnly]
     serializer_class = HabitSerializer

@@ -5,7 +5,7 @@ import os
 import celery
 
 # Установка переменной окружения для настроек проекта
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'PythonProject3.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'drfcours.settings')
 
 # Создание экземпляра объекта Celery
 app = celery.Celery('config')

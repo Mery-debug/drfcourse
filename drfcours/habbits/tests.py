@@ -8,7 +8,7 @@ from .serializers import PublicHabitSerializer
 
 User = get_user_model()
 
-class HabitsCreate(APITestCase):
+class HabitsCreateTest(APITestCase):
 
     def setUp(self):
         """Создание пользователя и 2-х привычек, публичной и не приятной"""
@@ -78,7 +78,7 @@ class HabitsCreate(APITestCase):
 
 
 
-class HabitsWithoutAuthorization(APITestCase):
+class HabitsWithoutAuthorizationTest(APITestCase):
 
     def test_create_habit_unauthorized_fails(self):
         """Тест создания привычки не авторизованным пользователем"""

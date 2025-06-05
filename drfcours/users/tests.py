@@ -45,42 +45,42 @@ class UserSerializerTest(TestCase):
         self.assertFalse(serializer.is_valid())
         self.assertIn('password', serializer.errors)
 
-    class TokenSerializerTest(TestCase):
-        def setUp(self):
-            self.user = User.objects.create_user(
-                email='tokenuser@example.com',
-                password='testpass123'
-            )
+class TokenSerializerTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            email='tokenuser@example.com',
+            password='testpass123'
+        )
 
-        def test_get_token_contains_email(self):
-            """Проверка, что email включен в токен"""
-            token = TokenSerializer.get_token(self.user)
-            self.assertIn('email', token.payload)
-            self.assertEqual(token.payload['email'], 'tokenuser@example.com')
+    def test_get_token_contains_email(self):
+        """Проверка, что email включен в токен"""
+        token = TokenSerializer.get_token(self.user)
+        self.assertIn('email', token.payload)
+        self.assertEqual(token.payload['email'], 'tokenuser@example.com')
 
-        def test_get_token_contains_username(self):
-            """Проверка, что username включен в токен (несмотря на username=None в модели)"""
-            token = TokenSerializer.get_token(self.user)
-            self.assertIn('username', token.payload)
-            self.assertIsNone(token.payload['username'])  # Так как у вас username=None в модели
+    def test_get_token_contains_username(self):
+        """Проверка, что username включен в токен (несмотря на username=None в модели)"""
+        token = TokenSerializer.get_token(self.user)
+        self.assertIn('username', token.payload)
+        self.assertIsNone(token.payload['username'])  # Так как у вас username=None в модели
 
-        def test_token_serializer_with_valid_credentials(self):
-            """Проверка получения токена с валидными учетными данными"""
-            data = {
-                'email': 'tokenuser@example.com',
-                'password': 'testpass123'
-            }
-            serializer = TokenSerializer(data=data)
-            self.assertTrue(serializer.is_valid())
-            self.assertIn('access', serializer.validated_data)
-            self.assertIn('refresh', serializer.validated_data)
+    def test_token_serializer_with_valid_credentials(self):
+        """Проверка получения токена с валидными учетными данными"""
+        data = {
+            'email': 'tokenuser@example.com',
+            'password': 'testpass123'
+        }
+        serializer = TokenSerializer(data=data)
+        self.assertTrue(serializer.is_valid())
+        self.assertIn('access', serializer.validated_data)
+        self.assertIn('refresh', serializer.validated_data)
 
-        def test_token_serializer_with_invalid_credentials(self):
-            """Проверка ошибки при неверных учетных данных"""
-            data = {
-                'email': 'tokenuser@example.com',
-                'password': 'wrongpassword'
-            }
-            serializer = TokenSerializer(data=data)
-            self.assertFalse(serializer.is_valid())
-            self.assertIn('detail', serializer.errors)
+    def test_token_serializer_with_invalid_credentials(self):
+        """Проверка ошибки при неверных учетных данных"""
+        data = {
+            'email': 'tokenuser@example.com',
+            'password': 'wrongpassword'
+        }
+        serializer = TokenSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn('detail', serializer.errors)
