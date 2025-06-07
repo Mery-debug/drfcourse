@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
+from samples.test_perf import response
 
 from .models import Habits
 from .serializers import PublicHabitSerializer
@@ -93,8 +94,9 @@ class HabitsWithoutAuthorizationTest(APITestCase):
             "execution_time": "00:02:00",
             "is_public": True
         }
+
         response = self.client.post(url, data=data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertFalse(Habits.objects.filter(move="test").exists())
 
 

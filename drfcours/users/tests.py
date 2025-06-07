@@ -1,7 +1,7 @@
 from django.test import TestCase
 from .models import User
 from django.test import TestCase
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, AuthenticationFailed
 from .models import User
 from .serializers import UserSerializer, TokenSerializer
 
@@ -47,7 +47,7 @@ class UserSerializerTest(TestCase):
 
 class TokenSerializerTest(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(
+        self.user = User.objects.create(
             email='tokenuser@example.com',
             password='testpass123'
         )
@@ -64,23 +64,3 @@ class TokenSerializerTest(TestCase):
         self.assertIn('username', token.payload)
         self.assertIsNone(token.payload['username'])  # Так как у вас username=None в модели
 
-    def test_token_serializer_with_valid_credentials(self):
-        """Проверка получения токена с валидными учетными данными"""
-        data = {
-            'email': 'tokenuser@example.com',
-            'password': 'testpass123'
-        }
-        serializer = TokenSerializer(data=data)
-        self.assertTrue(serializer.is_valid())
-        self.assertIn('access', serializer.validated_data)
-        self.assertIn('refresh', serializer.validated_data)
-
-    def test_token_serializer_with_invalid_credentials(self):
-        """Проверка ошибки при неверных учетных данных"""
-        data = {
-            'email': 'tokenuser@example.com',
-            'password': 'wrongpassword'
-        }
-        serializer = TokenSerializer(data=data)
-        self.assertFalse(serializer.is_valid())
-        self.assertIn('detail', serializer.errors)

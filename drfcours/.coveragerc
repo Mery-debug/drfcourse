@@ -10,6 +10,7 @@ omit =
     */asgi.py
     */tests.py
     habbits/tests.py
+    */__init__.py
 
 [report]
 exclude_lines =
