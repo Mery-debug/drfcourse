@@ -1,9 +1,6 @@
 from django.test import TestCase
-from .models import User
-from django.test import TestCase
-from rest_framework.exceptions import ValidationError, AuthenticationFailed
-from .models import User
-from .serializers import UserSerializer, TokenSerializer
+from users.models import User
+from users.serializers import UserSerializer, TokenSerializer
 
 class UserModelTest(TestCase):
     def test_email_unique(self):

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Habits
+from habbits.models import Habits
 
 
 @admin.register(Habits)

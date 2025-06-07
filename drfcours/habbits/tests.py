@@ -2,10 +2,8 @@ from django.contrib.auth import get_user_model
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
-from samples.test_perf import response
 
-from .models import Habits
-from .serializers import PublicHabitSerializer
+from habbits.models import Habits
 
 User = get_user_model()
 

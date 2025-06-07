@@ -3,8 +3,8 @@ from rest_framework import generics
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .models import User
-from .serializers import TokenSerializer, UserSerializer
+from users.models import User
+from users.serializers import TokenSerializer, UserSerializer
 
 
 class MyTokenObtainPairView(TokenObtainPairView):

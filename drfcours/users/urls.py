@@ -4,8 +4,8 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from .apps import UsersConfig
-from .views import (
+from users.apps import UsersConfig
+from users.views import (
     UsersCreateAPIView,
     UsersDestroyAPIView,
     UsersListAPIView,

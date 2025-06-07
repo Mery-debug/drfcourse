@@ -1,9 +1,8 @@
 from datetime import timedelta
 
-from dateutils import minutes
 from rest_framework import serializers
 
-from .models import Habits
+from habbits.models import Habits
 
 
 class HabitSerializer(serializers.ModelSerializer):

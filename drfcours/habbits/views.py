@@ -1,9 +1,8 @@
-from .models import Habits
-from .paginators import Pagination
-from .permissions import OwnerOrReadOnly
-from .serializers import HabitSerializer, PublicHabitSerializer
+from habbits.models import Habits
+from habbits.paginators import Pagination
+from habbits.permissions import OwnerOrReadOnly
+from habbits.serializers import HabitSerializer, PublicHabitSerializer
 from rest_framework import generics, viewsets
-from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 

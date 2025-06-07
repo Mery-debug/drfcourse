@@ -1,6 +1,6 @@
 from django.urls import path
-from .apps import HabbitsConfig
-from .views import (
+from habbits.apps import HabbitsConfig
+from habbits.views import (
     HabitCreateAPIView,
     HabitDestroyAPIView,
     HabitListAPIView,
