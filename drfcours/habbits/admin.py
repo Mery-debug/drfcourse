@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from habbits.models import Habits
+
+
+@admin.register(Habits)
+class UserAdmin(admin.ModelAdmin):
+    list_filter = ("id", "move")

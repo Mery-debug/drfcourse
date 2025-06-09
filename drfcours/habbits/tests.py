@@ -1,3 +1,101 @@
-from django.test import TestCase
+from django.contrib.auth import get_user_model
+from rest_framework.reverse import reverse
+from rest_framework.test import APITestCase
+from rest_framework import status
 
-# Create your tests here.
+from habbits.models import Habits
+
+User = get_user_model()
+
+class HabitsCreateTest(APITestCase):
+
+    def setUp(self):
+        """Создание пользователя и 2-х привычек, публичной и не приятной"""
+        self.user = User.objects.create(email="sample@example.ru")
+        self.habits_1 = Habits.objects.create(
+            owner=self.user,
+            place="Кухня",
+            time="10:00",
+            move="Попить кофе",
+            good_hab=False,
+            periodicity=1,
+            execution_time="00:02:00",
+            is_public=False,
+            last_remember=None
+        )
+        self.habits_2 = Habits.objects.create(
+            owner=self.user,
+            place="Спальня",
+            time="10:05",
+            move="Отжимания",
+            good_hab=True,
+            linked_hab= self.habits_1,
+            periodicity=1,
+            #reward="Конфета",
+            execution_time="00:02:00",
+            is_public=True,
+            last_remember=None
+        )
+        self.client.force_authenticate(user=self.user)
+
+
+    def test_habits_list_public(self):
+        """Тест доступности списка публичных привычек"""
+        url = reverse('habbits:public-habits-list')
+        response = self.client.get(url)
+        data = response.json()
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_200_OK
+        )
+        self.assertEqual(
+            data,
+            [{'id': 2, 'place': 'Спальня', 'time': '10:05:00', 'move': 'Отжимания', 'periodicity': 1, 'execution_time': '00:02:00'}]
+        )
+
+    def test_habits_validation(self):
+        """Тест валидации создания привычки"""
+        url = reverse('habbits:habits_create')
+        data = {
+            "place": "",
+            "time": "25:00:00",
+            "move": "",
+            "good_hab": False,
+            "periodicity": 8,
+            "reward": "Конфета",
+            "execution_time": "00:10:00",
+            "is_public": True,
+            "last_remember": None
+        }
+
+        response = self.client.post(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        error_data = response.data
+        self.assertEqual(str(error_data['place'][0]), "This field may not be blank.")
+        self.assertEqual(str(error_data['time'][0]), "Time has wrong format. Use one of these formats instead: hh:mm[:ss[.uuuuuu]].")
+        self.assertEqual(str(error_data['execution_time'][0]), "Ensure this value is less than or equal to 0:02:00.")
+
+
+
+class HabitsWithoutAuthorizationTest(APITestCase):
+
+    def test_create_habit_unauthorized_fails(self):
+        """Тест создания привычки не авторизованным пользователем"""
+        url = reverse('habits:habits_create')
+        data = {
+            "place": "test",
+            "time": "09:05",
+            "move": "test",
+            "good_hab": True,
+            "reward": "Конфета",
+            "periodicity": 1,
+            "execution_time": "00:02:00",
+            "is_public": True
+        }
+
+        response = self.client.post(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertFalse(Habits.objects.filter(move="test").exists())
+
+
+

@@ -1,3 +1,60 @@
-from django.shortcuts import render
+from habbits.models import Habits
+from habbits.paginators import Pagination
+from habbits.permissions import OwnerOrReadOnly
+from habbits.serializers import HabitSerializer, PublicHabitSerializer
+from rest_framework import generics, viewsets
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
-# Create your views here.
+
+class PublicHabitViewSet(viewsets.ReadOnlyModelViewSet):
+    """Публичный доступ к привычкам для всех пользователей"""
+
+    queryset = Habits.objects.filter(is_public=True)
+    serializer_class = PublicHabitSerializer
+    permission_classes = [AllowAny]
+
+
+class HabitListAPIView(generics.ListAPIView):
+    """Эндпоинт закрытого доступа только к списку своих привычек пользователя"""
+
+    serializer_class = HabitSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = Pagination
+
+    def get_queryset(self):
+        return Habits.objects.filter(owner=self.request.user)
+
+
+class HabitRetrieveAPIView(generics.RetrieveAPIView):
+    """Эндпоинт закрытого доступа к конкретной привычке"""
+
+    serializer_class = HabitSerializer
+    permission_classes = [IsAuthenticated, OwnerOrReadOnly]
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["habits_id"] = self.kwargs["pk"]
+        return context
+
+
+class HabitCreateAPIView(generics.CreateAPIView):
+    """Эндпоинт создания привычки только для авторизованных пользователей"""
+
+    serializer_class = HabitSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class HabitUpdateAPIView(generics.UpdateAPIView):
+    """Эндпоинт изменения привычки только для авторизованного владельца привычки"""
+
+    serializer_class = HabitSerializer
+    permission_classes = [IsAuthenticated, OwnerOrReadOnly]
+    queryset = Habits.objects.all()
+
+
+class HabitDestroyAPIView(generics.DestroyAPIView):
+    """Эндпоинт удаления привычки только для авторизованного владельца привычки"""
+
+    queryset = Habits.objects.all()
+    permission_classes = [IsAuthenticated, OwnerOrReadOnly]
+    serializer_class = HabitSerializer
